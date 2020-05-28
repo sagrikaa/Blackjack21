@@ -1,0 +1,40 @@
+ body {
+   padding: 0;
+   margin: 0;
+   font-size: 62.5%;
+ }
+
+ .App {
+   text-align: center;
+   background-image: radial-gradient(rgba(#135B0D, .8), rgba(#0D3909, .8));
+   height: 100vh;
+   padding: 5rem;
+   display: flex;
+ }
+
+ .dealer {
+   flex: 0 0 50%;
+ }
+
+ .player,
+ .dealer {
+   flex: 1;
+   display: flex;
+   justify-content: center;
+   align-items: flex-start;
+ }
+
+ .chip {
+   height: 50px;
+   transition: all .1s;
+
+   &__red {
+     height: 56px;
+   }
+
+   &__black {}
+
+   &:hover {
+     transform: translateY(-1px);
+   }
+ }
