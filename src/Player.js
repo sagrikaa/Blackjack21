@@ -5,8 +5,8 @@ export default function Player() {
 	return (
 		<div className="player">
 			Player
-			<Cards />
-			<Cards />
+			<Cards code="AH" turnedDown={false} />
+			<Cards code="KS" turnedDown={false} />
 		</div>
 	);
 }

@@ -4,8 +4,8 @@ export default function Dealer() {
 	return (
 		<div className="dealer">
 			Dealer
-			<Cards />
-			<Cards />
+			<Cards code="7H" turnedDown={true} />
+			<Cards code="10C" turnedDown={false} />
 		</div>
 	);
 }
