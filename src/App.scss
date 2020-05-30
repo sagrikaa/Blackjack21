@@ -8,20 +8,56 @@
    text-align: center;
    background-image: radial-gradient(rgba(#135B0D, .8), rgba(#0D3909, .8));
    height: 100vh;
-   padding: 5rem;
+
    display: flex;
+   flex-direction: column;
+   padding: 5rem;
+
  }
 
- .dealer {
-   flex: 0 0 50%;
+ .board {
+   display: flex;
+   padding: 10rem;
+ }
+
+ .btn {
+   outline: none;
+   padding: 1rem 2rem;
+   border: none;
+   text-transform: uppercase;
+   margin: 1rem;
+
+   &__play {
+     align-self: center;
+     color: #fff;
+     background-color: black;
+
+   }
  }
 
  .player,
  .dealer {
-   flex: 1;
+   flex: 0 0 50%;
    display: flex;
+   flex-direction: column;
    justify-content: center;
-   align-items: flex-start;
+   align-items: center;
+ }
+
+ .cards {
+   display: flex;
+   flex-wrap: wrap;
+   margin: 2rem;
+   padding: 2rem;
+
+ }
+
+ .card {
+   margin: -.5rem;
+
+   &:not(:first-child) {
+     transform: rotate(10deg);
+   }
  }
 
  .chip {

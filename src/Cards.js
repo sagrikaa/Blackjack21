@@ -1,15 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useRef } from 'react';
 
-export default class Cards extends Component {
-	canvas = React.createRef();
+export default function Card(props) {
+	const canvas = useRef();
 
-	componentDidMount() {
-		this.drawCards();
-	}
-
-	drawCards = () => {
-		const canvas = this.canvas.current;
-		const ctx = canvas.getContext('2d');
+	useEffect(
+		() => {
+			drawCards();
+		},
+		[ props ]
+	);
+	// componentDidMount() {
+	// 	this.drawCards();
+	// }
+	// componentDidUpdate() {
+	// 	this.drawCards();
+	// }
+	const drawCards = () => {
+		const destination = canvas.current;
+		const ctx = destination.getContext('2d');
 		let img = new Image();
 
 		img.onload = () => {
@@ -26,31 +34,29 @@ export default class Cards extends Component {
 
 			//Destination specs
 			const dWidth = 75;
-			const dHeight = 112.5; // height to width ration = 3/2
-
+			const dHeight = 112.5; // height to width ratio = 3/2
 			//if the card is turned down
-			if (this.props.turnedDown) {
+			if (props.showCard === false) {
 				cx = 2 * 79;
 				cy = 4 * 123;
-			} else if (this.props.code != null) {
-				const code = this.props.code.split('');
+			} else if (props.code != null) {
+				const code = props.code.split('');
 				let suit, card;
+				suit = code[1];
+				card = code[0];
+				// }
 
-				//if card numer is 10
-				if (code.length > 2) {
-					suit = code[2];
-					card = code[0] + '' + code[1];
-				} else {
-					suit = code[1];
-					card = code[0];
-				}
-
-				if (parseInt(card) >= 2 || parseInt(card) <= 10) {
+				if (parseInt(card) >= 2 && parseInt(card) <= 9) {
+					if (parseInt(card) === 0) {
+					}
 					cx = (parseInt(card) - 1) * 79;
 				} else {
 					switch (card) {
 						case 'A':
 							cx = 0;
+							break;
+						case '0':
+							cx = 9 * 79;
 							break;
 						case 'J':
 							cx = 10 * 79;
@@ -79,7 +85,6 @@ export default class Cards extends Component {
 						break;
 				}
 			}
-
 			ctx.drawImage(img, cx, cy, cWidth, cHeight, dx, dy, dWidth, dHeight);
 
 			// ctx.drawImage(img, 0, 0, 79, 123, 0, 0, 75, 112.5);
@@ -88,7 +93,5 @@ export default class Cards extends Component {
 		img.src = 'http://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
 	};
 
-	render() {
-		return <canvas ref={this.canvas} height="112.5" width="75" />;
-	}
+	return <canvas ref={canvas} height="112.5" width="75" className="card" />;
 }

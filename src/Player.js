@@ -1,12 +1,19 @@
 import React from 'react';
-import Cards from './Cards';
+import Card from './Cards';
 
-export default function Player() {
+export default function Player(props) {
+	const player = props.player;
 	return (
 		<div className="player">
-			Player
-			<Cards code="AH" turnedDown={false} />
-			<Cards code="KS" turnedDown={false} />
+			<div className="card-value">
+				<span>Value</span>
+			</div>
+			<div className="cards">
+				{player.cards.map((card, index) => {
+					if (index === 0) return <Card code="0C" key={index} showCard={true} />;
+					return <Card code={card.code} key={index} showCard={true} />;
+				})}
+			</div>
 		</div>
 	);
 }
