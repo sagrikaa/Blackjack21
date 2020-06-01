@@ -6,11 +6,11 @@ export default function Player(props) {
 	return (
 		<div className="player">
 			<div className="card-value">
-				<span>Value</span>
+				<span>{player.score}</span>
 			</div>
 			<div className="cards">
 				{player.cards.map((card, index) => {
-					if (index === 0) return <Card code="0C" key={index} showCard={true} />;
+					if (index === 0) return <Card code={card.code} key={index} showCard={true} />;
 					return <Card code={card.code} key={index} showCard={true} />;
 				})}
 			</div>

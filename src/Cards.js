@@ -5,7 +5,7 @@ export default function Card(props) {
 
 	useEffect(
 		() => {
-			drawCards();
+			drawCard();
 		},
 		[ props ]
 	);
@@ -15,7 +15,7 @@ export default function Card(props) {
 	// componentDidUpdate() {
 	// 	this.drawCards();
 	// }
-	const drawCards = () => {
+	const drawCard = () => {
 		const destination = canvas.current;
 		const ctx = destination.getContext('2d');
 		let img = new Image();
