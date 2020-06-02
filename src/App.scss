@@ -26,12 +26,14 @@
    border: none;
    text-transform: uppercase;
    margin: 1rem;
+   align-self: center;
+   color: #fff;
+   background-color: black;
+   border-radius: 50px;
+   font-size: 1rem;
 
-   &__play {
-     align-self: center;
-     color: #fff;
-     background-color: black;
-
+   &__disabled {
+     background-color: rgba(black, .5);
    }
  }
 
@@ -73,4 +75,9 @@
    &:hover {
      transform: translateY(-1px);
    }
+ }
+
+ .score {
+   font-size: 1rem;
+   color: #fff;
  }

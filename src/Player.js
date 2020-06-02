@@ -5,7 +5,7 @@ export default function Player(props) {
 	const player = props.player;
 	return (
 		<div className="player">
-			<div className="card-value">
+			<div className="score">
 				<span>{player.score}</span>
 			</div>
 			<div className="cards">

@@ -4,7 +4,7 @@ import Card from './Cards';
 export default function Dealer({ dealer, stand }) {
 	return (
 		<div className="dealer">
-			<div className="card-value">
+			<div className="score">
 				<span>{dealer.score}</span>
 			</div>
 			<div className="cards">

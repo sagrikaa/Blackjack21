@@ -4,22 +4,6 @@ import Player from './Player';
 import Dealer from './Dealer';
 import axios from 'axios';
 function App() {
-	// state = {
-	// 	player: {
-	// 		name: 'player',
-	// 		cards: [],
-	// 		score: 0,
-	// 		money: 2000
-	// 	},
-	// 	dealer: {
-	// 		name: 'dealer',
-	// 		cards: [],
-	// 		score: 0,
-	// 		showCard: false
-	// 	},
-	// 	winner: ''
-	// };
-
 	const [ player, setPlayer ] = useState({
 		name: 'player',
 		cards: [],
@@ -66,34 +50,49 @@ function App() {
 		return score;
 	};
 
-	const playerStand = () => {
-		// this.setState((prevState) => ({
-		// 	dealer: {
-		// 		...prevState.dealer,
-		// 		showCard: true
-		// 	}
-		// }));
-
-		setStand(true);
-		if (stand === true) calculateValue(dealer);
-		//dealer opens his second card
-		//Calculate value of dealer cards and player cards
-		/**
-       * 1. if dealer score >= 17, compare two values and declare winner
-       * 2. if dealer score < 17, draw another card for dealer=> compare two values and declare winner
-      */
-		// if player.score < dealer.score && dealer.score < 17, draw more cards
-		//if player.score>dealer.score && player.score <= 21 ==> player wins
-		//
+	const findWinner = () => {
+		//when player is hitting
+		if (player.score > 21) {
+			setWinner('dealer');
+		}
+		if (stand && dealer.score > player.score) setWinner('dealer');
+		if (dealer.score === 21) setWinner(dealer);
+		if (
+			player.score === 21 ||
+			(stand && ((dealer.score >= 17 && player.score > dealer.score) || dealer.score > 21))
+		)
+			//when player stands or blackjack
+			setWinner('player');
 	};
+
+	const playerStand = () => {
+		setStand(true);
+	};
+
 	const hit = () => {
 		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
 			newPlayer.cards = [ ...player.cards, ...res.data.cards ];
 			setPlayer({ ...newPlayer });
-			// calculateValue(player);
 		});
 	};
+
+	const dealerStandsOnSeventeen = () => {
+		if (stand === true && !winner && dealer.score < 17) {
+			let newDealer = dealer;
+			axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+				newDealer.cards = [ ...dealer.cards, ...res.data.cards ];
+				setDealer({ ...newDealer });
+			});
+		}
+	};
+
+	// useEffect(
+	// 	() => {
+	// 		if (winner.length !== 0) playerStand();
+	// 	},
+	// 	[ winner ]
+	// );
 
 	useEffect(
 		() => {
@@ -103,20 +102,32 @@ function App() {
 		},
 		[ stand, player.cards, dealer.cards ]
 	);
+
+	//Check for Winner and if dealer reached 17 yet
+	useEffect(
+		() => {
+			//Check if the player stands and dealer is at 17 yet
+			dealerStandsOnSeventeen();
+
+			//check winner for every score change
+			findWinner();
+		},
+		[ dealer.score, player.score ]
+	);
+
+	//Initial game setup
 	useEffect(() => {
-		//Initial game set up
+		//Initial game set up with two cards each
 		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
 			newPlayer.cards = res.data.cards;
-			setPlayer({ ...newPlayer });
-			const pScore = calculateValue(player);
+			setPlayer({ ...player, cards: [ ...res.data.cards ] });
 		});
 
 		let newDealer = dealer;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
 			newDealer.cards = res.data.cards;
-			setDealer({ ...newDealer });
-			const dScore = calculateValue(dealer);
+			setDealer({ ...dealer, cards: [ ...res.data.cards ] });
 		});
 	}, []);
 
@@ -125,12 +136,19 @@ function App() {
 			{/* <button onClick={play} className="btn btn__play">
 				Play
 			</button> */}
-			<button onClick={() => setStand(true)} className="btn btn__play">
+			<span>{winner}</span>
+			<button onClick={playerStand} className="btn btn__stand">
 				Stand
 			</button>
-			<button onClick={hit} className="btn btn__play">
-				Hit
-			</button>
+			{stand || winner ? (
+				<button onClick={hit} className="btn btn__hit btn__disabled" disabled>
+					Hit
+				</button>
+			) : (
+				<button onClick={hit} className="btn btn__hit">
+					Hit
+				</button>
+			)}
 
 			<div className="board">
 				<Player player={player} />
