@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.scss';
 import Player from './Player';
 import Dealer from './Dealer';
+import Confetti from './Confetti';
 import axios from 'axios';
 function App() {
+	const app = useRef();
 	const [ player, setPlayer ] = useState({
 		name: 'player',
 		cards: [],
@@ -22,7 +24,6 @@ function App() {
 	const [ winner, setWinner ] = useState('');
 
 	const calculateValue = (person) => {
-		console.log(person);
 		let score = 0;
 		let count = 0;
 		if (person && person.cards.length !== 0) {
@@ -38,9 +39,14 @@ function App() {
 				}
 			});
 
+			if (count === 1 && person.name === 'dealer' && score >= 6 && score < 10) {
+				score += 1;
+				count--;
+			}
 			while (count > 0) {
 				if (score <= 10) score += 11;
 				else score += 1;
+
 				count--;
 			}
 
@@ -51,18 +57,20 @@ function App() {
 	};
 
 	const findWinner = () => {
-		//when player is hitting
-		if (player.score > 21) {
-			setWinner('dealer');
-		}
-		if (stand && dealer.score > player.score) setWinner('dealer');
-		if (dealer.score === 21) setWinner(dealer);
 		if (
 			player.score === 21 ||
-			(stand && ((dealer.score >= 17 && player.score > dealer.score) || dealer.score > 21))
-		)
+			(stand && ((dealer.score >= 17 && player.score >= dealer.score) || dealer.score > 21))
+		) {
 			//when player stands or blackjack
 			setWinner('player');
+			return;
+		}
+
+		//when player is hitting
+		if (player.score > 21 || dealer.score === 21 || dealer.score > player.score) {
+			setWinner('dealer');
+			return;
+		}
 	};
 
 	const playerStand = () => {
@@ -78,7 +86,7 @@ function App() {
 	};
 
 	const dealerStandsOnSeventeen = () => {
-		if (stand === true && !winner && dealer.score < 17) {
+		if (stand === true && dealer.score < 17 && winner === '') {
 			let newDealer = dealer;
 			axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
 				newDealer.cards = [ ...dealer.cards, ...res.data.cards ];
@@ -87,12 +95,14 @@ function App() {
 		}
 	};
 
-	// useEffect(
-	// 	() => {
-	// 		if (winner.length !== 0) playerStand();
-	// 	},
-	// 	[ winner ]
-	// );
+	useEffect(
+		() => {
+			if (winner !== '') {
+				playerStand();
+			}
+		},
+		[ winner ]
+	);
 
 	useEffect(
 		() => {
@@ -106,18 +116,19 @@ function App() {
 	//Check for Winner and if dealer reached 17 yet
 	useEffect(
 		() => {
-			//Check if the player stands and dealer is at 17 yet
-			dealerStandsOnSeventeen();
+			if (winner === '') {
+				//Check if the player stands and dealer is at 17 yet
+				dealerStandsOnSeventeen();
 
-			//check winner for every score change
-			findWinner();
+				//check winner for every score change
+				findWinner();
+			}
 		},
 		[ dealer.score, player.score ]
 	);
 
 	//Initial game setup
 	useEffect(() => {
-		//Initial game set up with two cards each
 		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
 			newPlayer.cards = res.data.cards;
@@ -132,10 +143,11 @@ function App() {
 	}, []);
 
 	return (
-		<div className="App">
+		<div className="App" ref={app}>
 			{/* <button onClick={play} className="btn btn__play">
 				Play
 			</button> */}
+			{winner === 'player' ? <Confetti /> : null}
 			<span>{winner}</span>
 			<button onClick={playerStand} className="btn btn__stand">
 				Stand
@@ -159,15 +171,3 @@ function App() {
 }
 
 export default App;
-
-// const blackJack = (name, opponent, score) => {
-// 	if (score === 21) {
-// 		this.setState({ winner: name });
-// 		return;
-// 	}
-
-// 	if (score > 21) {
-// 		this.setState({ winner: opponent });
-// 		return;
-// 	}
-// };

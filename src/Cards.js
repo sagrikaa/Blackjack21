@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function Card(props) {
 	const canvas = useRef();
@@ -9,12 +9,7 @@ export default function Card(props) {
 		},
 		[ props ]
 	);
-	// componentDidMount() {
-	// 	this.drawCards();
-	// }
-	// componentDidUpdate() {
-	// 	this.drawCards();
-	// }
+
 	const drawCard = () => {
 		const destination = canvas.current;
 		const ctx = destination.getContext('2d');
@@ -86,8 +81,6 @@ export default function Card(props) {
 				}
 			}
 			ctx.drawImage(img, cx, cy, cWidth, cHeight, dx, dy, dWidth, dHeight);
-
-			// ctx.drawImage(img, 0, 0, 79, 123, 0, 0, 75, 112.5);
 		};
 
 		img.src = 'http://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
