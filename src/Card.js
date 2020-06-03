@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { Transition } from 'react-transition-group';
 
 export default function Card(props) {
 	const canvas = useRef();
@@ -86,5 +87,11 @@ export default function Card(props) {
 		img.src = 'http://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
 	};
 
-	return <canvas ref={canvas} height="112.5" width="75" className="card" />;
+	return (
+		<Transition in={true} timeout={2000} appear>
+			{(state) => (
+				<canvas ref={canvas} height="112.5" width="75" className={`card card-${props.customClass}__${state}`} />
+			)}
+		</Transition>
+	);
 }

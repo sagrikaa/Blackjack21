@@ -10,7 +10,7 @@ export default function Confetti() {
 
 	useEffect(() => {
 		myConfetti({
-			particleCount: 100,
+			particleCount: 300,
 			spread: 200
 		});
 		// return () => {

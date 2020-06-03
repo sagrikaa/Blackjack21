@@ -6,7 +6,7 @@
 
  .App {
    text-align: center;
-   background-image: radial-gradient(rgba(#135B0D, .8), rgba(#0D3909, .8));
+   background-image: radial-gradient(rgba(#135B0D, .6), rgba(#0D3909, .8));
    height: 100vh;
 
    display: flex;
@@ -15,14 +15,30 @@
 
  }
 
+ .heading-2 {
+   font-size: 3rem;
+
+   &__entered {
+     color: brown;
+     -webkit-text-stroke-width: 1px;
+     -webkit-text-stroke-color: black;
+   }
+
+   &__entering {
+     animation: moveInTop 2s ease-in-out;
+   }
+ }
+
+
+
  .board {
    display: flex;
-   padding: 10rem;
+   padding: 5rem;
  }
 
  .btn {
    outline: none;
-   padding: 1rem 2rem;
+   padding: .5rem 1rem;
    border: none;
    text-transform: uppercase;
    margin: 1rem;
@@ -31,6 +47,10 @@
    background-color: black;
    border-radius: 50px;
    font-size: 1rem;
+   cursor: pointer;
+
+   &__hit,
+   &__stand {}
 
    &__disabled {
      background-color: rgba(black, .5);
@@ -42,24 +62,41 @@
    flex: 0 0 50%;
    display: flex;
    flex-direction: column;
-   justify-content: center;
    align-items: center;
  }
 
  .cards {
    display: flex;
    flex-wrap: wrap;
-   margin: 2rem;
+   justify-content: center;
    padding: 2rem;
+   max-width: 180px;
 
  }
 
  .card {
-   margin: -.5rem;
+   margin-left: -18%;
+   margin-bottom: .5rem;
+   box-shadow: 0 2rem 4rem rgba(rgb(11, 44, 8), .5);
 
-   &:not(:first-child) {
-     transform: rotate(10deg);
+   &-player__entered {
+     margin-left: -18%;
+     margin-bottom: .5rem;
+     box-shadow: 0 2rem 4rem rgba(rgb(11, 44, 8), .5);
    }
+
+   &-player__entering {
+     opacity: 0;
+     animation: playerCardAnimation 2s ease;
+   }
+
+   &-dealer__entered {}
+
+   &-dealer__entering {
+     animation: dealerCardAnimation 2s ease;
+
+   }
+
  }
 
  .chip {
@@ -78,6 +115,52 @@
  }
 
  .score {
-   font-size: 1rem;
+   font-size: 1.6rem;
    color: #fff;
+   -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: black;
+ }
+
+
+
+
+ @keyframes moveInTop {
+   0% {
+     opacity: 0;
+     transform: translateY(-10rem);
+
+   }
+
+   100% {
+     opacity: 1;
+     transform: translateY(0rem);
+
+
+   }
+ }
+
+ @keyframes playerCardAnimation {
+   0% {
+     opacity: 0;
+     transform: translateX(-20rem) translateY(30rem);
+   }
+
+   100% {
+     opacity: 1;
+     transform: translateX(0) translateY(0);
+
+   }
+ }
+
+ @keyframes dealerCardAnimation {
+   0% {
+     opacity: 0;
+     transform: translateX(20rem) translateY(30rem);
+   }
+
+   100% {
+     opacity: 1;
+     transform: translateX(0) translateY(0);
+
+   }
  }

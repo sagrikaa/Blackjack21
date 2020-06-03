@@ -4,6 +4,8 @@ import Player from './Player';
 import Dealer from './Dealer';
 import Confetti from './Confetti';
 import axios from 'axios';
+import { Transition } from 'react-transition-group';
+
 function App() {
 	const app = useRef();
 	const [ player, setPlayer ] = useState({
@@ -20,6 +22,7 @@ function App() {
 		showCard: false
 	});
 
+	const [ inProp, setInProp ] = useState(true);
 	const [ stand, setStand ] = useState(false);
 	const [ winner, setWinner ] = useState('');
 
@@ -129,24 +132,54 @@ function App() {
 
 	//Initial game setup
 	useEffect(() => {
-		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
-			newPlayer.cards = res.data.cards;
+			console.log(res.data.cards);
 			setPlayer({ ...player, cards: [ ...res.data.cards ] });
 		});
+		// const newPlayer = player;
+		// axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+		// 	console.log(res.data.cards);
+		// 	newPlayer.cards = res.data.cards;
+		// 	setPlayer({ ...newPlayer });
+		// });
+		// setTimeout(() => {
+		// 	axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+		// 		console.log(res.data.cards);
+		// 		newPlayer.cards = [ ...newPlayer.cards, ...res.data.cards ];
+		// 		setPlayer({ ...newPlayer });
+		// 	});
+		// }, 2000);
 
 		let newDealer = dealer;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
 			newDealer.cards = res.data.cards;
 			setDealer({ ...dealer, cards: [ ...res.data.cards ] });
 		});
+		// const newDealer = dealer;
+		// axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+		// 	console.log(res.data.cards);
+		// 	newDealer.cards = res.data.cards;
+		// 	setDealer({ ...newDealer });
+		// });
+		// setTimeout(() => {
+		// 	axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+		// 		console.log(res.data.cards);
+		// 		newDealer.cards = [ ...newDealer.cards, ...res.data.cards ];
+		// 		setDealer({ ...newDealer });
+		// 	});
+		// }, 2000);
 	}, []);
 
 	return (
-		<div className="App" ref={app}>
-			{/* <button onClick={play} className="btn btn__play">
-				Play
-			</button> */}
+		<div className="App">
+			<Transition in={true} timeout={2000} appear>
+				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
+			</Transition>
+			{/* <h2 className="heading-2">Welcome to BlackJack 21!</h2> */}
+			<div className="board">
+				<Player player={player} />
+				<Dealer dealer={dealer} stand={stand} />
+			</div>
 			{winner === 'player' ? <Confetti /> : null}
 			<span>{winner}</span>
 			<button onClick={playerStand} className="btn btn__stand">
@@ -161,11 +194,6 @@ function App() {
 					Hit
 				</button>
 			)}
-
-			<div className="board">
-				<Player player={player} />
-				<Dealer dealer={dealer} stand={stand} />
-			</div>
 		</div>
 	);
 }
