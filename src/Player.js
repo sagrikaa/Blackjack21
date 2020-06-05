@@ -9,7 +9,6 @@ export default function Player(props) {
 				<span>{player.score}</span>
 			</div>
 			<div className="cards">
-				{console.log(player)}
 				{player.cards.map((card, index) => {
 					// if (index === 0) return <Card code={card.code} key={index} showCard={true} index={index} />;
 					return <Card code={card.code} key={index} showCard={true} customClass="player" />;

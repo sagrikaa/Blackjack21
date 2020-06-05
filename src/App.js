@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.scss';
 import Player from './Player';
 import Dealer from './Dealer';
 import Confetti from './Confetti';
+import WinnerModal from './WinnerModal';
 import axios from 'axios';
 import { Transition } from 'react-transition-group';
 
 function App() {
-	const app = useRef();
 	const [ player, setPlayer ] = useState({
 		name: 'player',
 		cards: [],
@@ -39,18 +39,27 @@ function App() {
 					score += 10;
 				else {
 					count++;
+					score += 11;
 				}
 			});
+			// 		if (count === 1 && person.name === 'dealer' && score >= 6 && score < 10) {
+			// 			score += 1;
+			// 			count--;
+			// 		}
+			// 		while (count > 0) {
+			// 			if (person.name === 'dealer' && score >= 6 && score < 10) {
+			// 				score += 1;
+			// 			} else if (score <= 10) score += 11;
+			// 			else score += 1;
 
-			if (count === 1 && person.name === 'dealer' && score >= 6 && score < 10) {
-				score += 1;
-				count--;
-			}
+			// 			count--;
+			// 		}
 			while (count > 0) {
-				if (score <= 10) score += 11;
-				else score += 1;
-
-				count--;
+				if (score > 21 || (person.name === 'dealer' && score <= player.score && score >= 17)) {
+					console.log(score);
+					score -= 10;
+					count--;
+				} else break;
 			}
 
 			person.name === 'player' ? setPlayer({ ...player, score }) : setDealer({ ...dealer, score });
@@ -58,7 +67,6 @@ function App() {
 
 		return score;
 	};
-
 	const findWinner = () => {
 		if (
 			player.score === 21 ||
@@ -70,17 +78,19 @@ function App() {
 		}
 
 		//when player is hitting
-		if (player.score > 21 || dealer.score === 21 || dealer.score > player.score) {
+		if (player.score > 21 || dealer.score === 21 || (stand && dealer.score > player.score)) {
+			console.log(dealer);
+			console.log(dealer.score);
 			setWinner('dealer');
 			return;
 		}
 	};
 
-	const playerStand = () => {
+	const handleStand = () => {
 		setStand(true);
 	};
 
-	const hit = () => {
+	const handleHit = () => {
 		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
 			newPlayer.cards = [ ...player.cards, ...res.data.cards ];
@@ -89,7 +99,9 @@ function App() {
 	};
 
 	const dealerStandsOnSeventeen = () => {
-		if (stand === true && dealer.score < 17 && winner === '') {
+		// if (winner !== '') return;
+		if (stand === true && (dealer.score < 17 && dealer.score <= player.score) && winner === '') {
+			console.log(winner);
 			let newDealer = dealer;
 			axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
 				newDealer.cards = [ ...dealer.cards, ...res.data.cards ];
@@ -98,18 +110,28 @@ function App() {
 		}
 	};
 
-	useEffect(
-		() => {
-			if (winner !== '') {
-				playerStand();
-			}
-		},
-		[ winner ]
-	);
+	const handleShuffle = () => {
+		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/shuffle').then((res) => {
+			console.log(res.data);
+		});
+	};
 
+	//Initial game setup
+	useEffect(() => {
+		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
+			setPlayer({ ...player, cards: [ ...res.data.cards ] });
+		});
+
+		let newDealer = dealer;
+		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
+			newDealer.cards = res.data.cards;
+			setDealer({ ...dealer, cards: [ ...res.data.cards ] });
+		});
+	}, []);
+
+	//keeping the score updated
 	useEffect(
 		() => {
-			//keeping the score updated
 			calculateValue(dealer);
 			calculateValue(player);
 		},
@@ -120,58 +142,32 @@ function App() {
 	useEffect(
 		() => {
 			if (winner === '') {
-				//Check if the player stands and dealer is at 17 yet
-				dealerStandsOnSeventeen();
-
-				//check winner for every score change
 				findWinner();
+				if (stand) dealerStandsOnSeventeen();
 			}
 		},
 		[ dealer.score, player.score ]
 	);
 
-	//Initial game setup
-	useEffect(() => {
-		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
-			console.log(res.data.cards);
-			setPlayer({ ...player, cards: [ ...res.data.cards ] });
-		});
-		// const newPlayer = player;
-		// axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
-		// 	console.log(res.data.cards);
-		// 	newPlayer.cards = res.data.cards;
-		// 	setPlayer({ ...newPlayer });
-		// });
-		// setTimeout(() => {
-		// 	axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
-		// 		console.log(res.data.cards);
-		// 		newPlayer.cards = [ ...newPlayer.cards, ...res.data.cards ];
-		// 		setPlayer({ ...newPlayer });
-		// 	});
-		// }, 2000);
-
-		let newDealer = dealer;
-		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
-			newDealer.cards = res.data.cards;
-			setDealer({ ...dealer, cards: [ ...res.data.cards ] });
-		});
-		// const newDealer = dealer;
-		// axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
-		// 	console.log(res.data.cards);
-		// 	newDealer.cards = res.data.cards;
-		// 	setDealer({ ...newDealer });
-		// });
-		// setTimeout(() => {
-		// 	axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
-		// 		console.log(res.data.cards);
-		// 		newDealer.cards = [ ...newDealer.cards, ...res.data.cards ];
-		// 		setDealer({ ...newDealer });
-		// 	});
-		// }, 2000);
-	}, []);
+	//if Winner is set then open dealer card
+	useEffect(
+		() => {
+			if (winner !== '') {
+				handleStand();
+			}
+		},
+		[ winner ]
+	);
 
 	return (
-		<div className="App">
+		<div
+			className="App"
+			onClick={() => {
+				setWinner('');
+			}}>
+			{winner === 'player' ? <Confetti /> : null}
+			{winner !== '' ? <WinnerModal isOpen={winner !== ''} winner={winner} /> : null}
+
 			<Transition in={true} timeout={2000} appear>
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
@@ -180,17 +176,19 @@ function App() {
 				<Player player={player} />
 				<Dealer dealer={dealer} stand={stand} />
 			</div>
-			{winner === 'player' ? <Confetti /> : null}
 			<span>{winner}</span>
-			<button onClick={playerStand} className="btn btn__stand">
+			<button onClick={handleStand} className="btn btn__stand">
 				Stand
 			</button>
+			<button onClick={handleShuffle} className="btn btn__stand">
+				Shuffle
+			</button>
 			{stand || winner ? (
-				<button onClick={hit} className="btn btn__hit btn__disabled" disabled>
+				<button onClick={handleHit} className="btn btn__hit btn__disabled" disabled>
 					Hit
 				</button>
 			) : (
-				<button onClick={hit} className="btn btn__hit">
+				<button onClick={handleHit} className="btn btn__hit">
 					Hit
 				</button>
 			)}
