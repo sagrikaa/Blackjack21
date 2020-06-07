@@ -2,18 +2,22 @@ import React from 'react';
 import Card from './Card';
 import Chips from './Chips';
 
-export default function Player({ player, handleBet }) {
+export default function Player({ player, handleBet, bet }) {
 	return (
 		<div className="player">
-			<div className="score">
-				<span>{player.score}</span>
-			</div>
-			<div className="cards">
-				{player.cards.map((card, index) => {
-					// if (index === 0) return <Card code={card.code} key={index} showCard={true} index={index} />;
-					return <Card code={card.code} key={index} showCard={true} customClass="player" />;
-				})}
-			</div>
+			{bet ? (
+				<React.Fragment>
+					<div className="score">
+						<span>{player.score}</span>
+					</div>
+					<div className="cards">
+						{player.cards.map((card, index) => {
+							// if (index === 0) return <Card code={card.code} key={index} showCard={true} index={index} />;
+							return <Card code={card.code} key={index} showCard={true} customClass="player" />;
+						})}
+					</div>
+				</React.Fragment>
+			) : null}
 			<div className="bet">
 				<Chips />
 				<h2>${player.money}</h2>

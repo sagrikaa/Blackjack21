@@ -7,19 +7,19 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 function App() {
 	const [ play, setPlay ] = useState(0);
 	const [ setting, handleSetting ] = useState(0);
-
+	const [ minBet, setMinBet ] = useState(10);
 	return (
 		<Router>
 			<div className="App">
 				<Switch>
 					<Route path="/game">
-						<Game />
+						<Game minBet={minBet} />
 					</Route>
 					<Route path="/settings">
 						<Settings />
 					</Route>
 					<Route exact path="/">
-						<LandingPage />
+						<LandingPage play={play} setPlay={setPlay} />
 					</Route>
 				</Switch>
 			</div>

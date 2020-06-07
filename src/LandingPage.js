@@ -3,7 +3,7 @@ import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-export default function LandingPage({ handlePlay, handleSetting }) {
+export default function LandingPage({ handlePlay, handleSetting, setPlay }) {
 	return (
 		<div className="landing-page">
 			<Transition in={true} timeout={2000} appear>
@@ -11,7 +11,7 @@ export default function LandingPage({ handlePlay, handleSetting }) {
 			</Transition>
 			<div className="horizontal-div">
 				<Link to="/game" className=" btn btn__play">
-					Play
+					{localStorage.getItem('money') ? 'Resume' : 'Play'}
 					<FontAwesomeIcon icon={faPlay} className="icon" />
 				</Link>
 

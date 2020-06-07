@@ -6,8 +6,9 @@ import Confetti from './Confetti';
 import WinnerModal from './WinnerModal';
 import axios from 'axios';
 import { Transition } from 'react-transition-group';
+import { Link } from 'react-router-dom';
 
-function App() {
+function Game({ minBet }) {
 	const [ player, setPlayer ] = useState({
 		name: 'player',
 		cards: [],
@@ -22,7 +23,7 @@ function App() {
 		score: 0,
 		showCard: false
 	});
-	const [ refresh, setRefresh ] = useState(0);
+	const [ bet, setBet ] = useState(0);
 	const [ stand, setStand ] = useState(false);
 	const [ winner, setWinner ] = useState('');
 	const [ isOpen, setIsOpen ] = useState(false);
@@ -90,6 +91,10 @@ function App() {
 		}
 	};
 
+	const dealHand = () => {
+		if (player.bet !== 0) setBet(1);
+	};
+
 	const handleBet = (amount) => {
 		let newBet = player.bet + amount;
 		setPlayer({ ...player, bet: newBet });
@@ -131,10 +136,11 @@ function App() {
 	//Initial game setup
 	useEffect(
 		() => {
-			let money;
-			if (!localStorage.getItem('money')) localStorage.setItem('money', 1500);
-			else money = localStorage.getItem('money');
-			if (player.bet !== 0) {
+			console.log(bet);
+			if (!localStorage.getItem('money')) localStorage.setItem('money', 2000);
+			let money = parseInt(localStorage.getItem('money'));
+
+			if (bet === 1) {
 				axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
 					setPlayer({ ...player, money: money, cards: [ ...res.data.cards ] });
 				});
@@ -144,7 +150,7 @@ function App() {
 				});
 			}
 		},
-		[ player.  bet ]
+		[ bet ]
 	);
 
 	// useEffect(() => {
@@ -185,7 +191,9 @@ function App() {
 				} else {
 					newMoney += player.bet;
 				}
+
 				setPlayer({ ...player, money: newMoney });
+				localStorage.setItem('money', newMoney);
 			}
 		},
 		[ winner ]
@@ -193,19 +201,27 @@ function App() {
 
 	return (
 		<div className="game animate__animated animate__zoomIn animate__slower">
-			{winner === 'player' ? <Confetti /> : null}
-			{/* {winner !== '' ? <WinnerModal isOpen={true} winner={winner} /> : null} */}
+			{/* display winner using a modal and cofetti  */}
 
-			<Transition in={true} timeout={2000} appear>
+			<Transition in={isOpen} timeout={2000} appear>
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
-			<button onClick={handleRefresh} className="btn btn__stand">
-				Refresh
-			</button>
+			{winner === 'player' ? <Confetti /> : null}
+			{winner !== '' ? <WinnerModal isOpen={true} winner={winner} /> : null}
+			{player.money > minBet ? (
+				<button onClick={dealHand} className="btn btn__stand">
+					Place bet
+				</button>
+			) : (
+				<Link to="/game" className=" btn btn__play">
+					New Game
+				</Link>
+			)}
+
 			<h3>{player.bet}</h3>
 			<div className="board">
-				<Player player={player} handleBet={handleBet} />
-				<Dealer dealer={dealer} stand={stand} />
+				<Player player={player} handleBet={handleBet} bet={bet} />
+				{bet ? <Dealer dealer={dealer} stand={stand} /> : null}
 			</div>
 			<span>{winner}</span>
 			<button onClick={handleStand} className="btn btn__stand">
@@ -227,4 +243,4 @@ function App() {
 	);
 }
 
-export default App;
+export default Game;
