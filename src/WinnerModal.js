@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 const customStyle = {
 	overlay: {
@@ -29,16 +29,15 @@ const customStyle = {
 		fontSize: '3rem'
 	}
 };
-export default function WinnerModal({ isOpen, winner }) {
-	const [ open, setOpen ] = useState(isOpen);
+export default function WinnerModal({ isOpen, winner, setIsOpen, setWinner, resetGame }) {
 	const handleClose = () => {
-		setOpen(false);
+		resetGame();
 	};
 	return (
 		<div>
 			<ReactModal
-				isOpen={open}
-				onRequestClose={handleClose}
+				isOpen={isOpen}
+				onRequestClose={resetGame}
 				ariaHideApp={false}
 				style={{
 					overlay: {

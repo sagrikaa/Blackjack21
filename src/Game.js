@@ -13,7 +13,7 @@ function Game({ minBet }) {
 		name: 'player',
 		cards: [],
 		score: 0,
-		money: 2000,
+		money: parseInt(localStorage.getItem('money')) || 2000,
 		bet: 0
 	});
 
@@ -23,9 +23,17 @@ function Game({ minBet }) {
 		score: 0,
 		showCard: false
 	});
-	const [ bet, setBet ] = useState(0);
+
+	//variable to determine if the bet is being played
+	const [ bet, setBet ] = useState(false);
+
+	//varibale to determine if player stands with the dealt hand
 	const [ stand, setStand ] = useState(false);
+
+	//varibale to determine the winner of the game
 	const [ winner, setWinner ] = useState('');
+
+	//variable to determine if the modal is open
 	const [ isOpen, setIsOpen ] = useState(false);
 
 	const calculateValue = (person) => {
@@ -33,6 +41,7 @@ function Game({ minBet }) {
 		let count = 0;
 		if (person && person.cards.length !== 0) {
 			person.cards.forEach((ele, index) => {
+				//Do not calculate the value of the first card of dealers hand until player stands
 				if (person.name === 'dealer' && !stand && index === 0) return;
 
 				const cardNumber = ele.code.split('')[0];
@@ -59,14 +68,11 @@ function Game({ minBet }) {
 	};
 
 	const findWinner = () => {
+		//when player stands or blackjack
 		if (
 			player.score === 21 ||
 			(stand && ((dealer.score >= 17 && player.score >= dealer.score) || dealer.score > 21))
 		) {
-			console.log(player.score);
-			console.log(dealer.score);
-			console.log(stand);
-			//when player stands or blackjack
 			setWinner('player');
 			return;
 		}
@@ -81,6 +87,7 @@ function Game({ minBet }) {
 		}
 	};
 
+	//func to draw cards for the dealer till it reaches a minimum score of 17
 	const dealerStandsOnSeventeen = () => {
 		if (stand === true && (dealer.score < 17 && dealer.score <= player.score) && winner === '') {
 			let newDealer = dealer;
@@ -91,15 +98,19 @@ function Game({ minBet }) {
 		}
 	};
 
+	// if the bet has been set then deal hand to both player and dealer
 	const dealHand = () => {
-		if (player.bet !== 0) setBet(1);
+		if (player.bet !== 0) setBet(true);
 	};
 
+	//function to set bet for player
 	const handleBet = (amount) => {
 		let newBet = player.bet + amount;
+		if (!(newBet <= player.money)) newBet = player.money;
 		setPlayer({ ...player, bet: newBet });
 	};
 
+	//function to generate card for player's each hit
 	const handleHit = () => {
 		let newPlayer = player;
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
@@ -136,16 +147,16 @@ function Game({ minBet }) {
 	//Initial game setup
 	useEffect(
 		() => {
-			console.log(bet);
-			if (!localStorage.getItem('money')) localStorage.setItem('money', 2000);
-			let money = parseInt(localStorage.getItem('money'));
-
-			if (bet === 1) {
+			if (!localStorage.getItem('money') || localStorage.getItem('money') === 0)
+				localStorage.setItem('money', player.money);
+			if (bet === true) {
 				axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
-					setPlayer({ ...player, money: money, cards: [ ...res.data.cards ] });
+					if (res.data.cards === []) handleShuffle();
+					setPlayer({ ...player, cards: [ ...res.data.cards ] });
 				});
 
 				axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
+					if (res.data.cards === []) handleShuffle();
 					setDealer({ ...dealer, cards: [ ...res.data.cards ] });
 				});
 			}
@@ -178,21 +189,28 @@ function Game({ minBet }) {
 		[ dealer.score, player.score ]
 	);
 
+	const resetGame = () => {
+		setBet(false);
+		setStand(false);
+		setIsOpen(false);
+		setWinner('');
+	};
 	//if Winner is set then open dealer card
 	useEffect(
 		() => {
 			if (winner !== '') {
 				console.log(winner);
-				handleStand();
-				setIsOpen(true);
+
 				let newMoney = player.money;
 				if (winner === 'dealer') {
 					newMoney -= player.bet;
 				} else {
 					newMoney += player.bet;
 				}
-
-				setPlayer({ ...player, money: newMoney });
+				handleStand();
+				setIsOpen(true);
+				// setBet(false);
+				setPlayer({ ...player, bet: 0, money: newMoney });
 				localStorage.setItem('money', newMoney);
 			}
 		},
@@ -203,12 +221,16 @@ function Game({ minBet }) {
 		<div className="game animate__animated animate__zoomIn animate__slower">
 			{/* display winner using a modal and cofetti  */}
 
-			<Transition in={isOpen} timeout={2000} appear>
+			<Transition in={true} timeout={2000} appear>
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
 			{winner === 'player' ? <Confetti /> : null}
-			{winner !== '' ? <WinnerModal isOpen={true} winner={winner} /> : null}
-			{player.money > minBet ? (
+			<WinnerModal
+				isOpen={isOpen}
+				winner={winner}
+				resetGame={resetGame}
+			/>
+			{player.money >= minBet ? (
 				<button onClick={dealHand} className="btn btn__stand">
 					Place bet
 				</button>
@@ -218,27 +240,27 @@ function Game({ minBet }) {
 				</Link>
 			)}
 
-			<h3>{player.bet}</h3>
+			<h3>{player.bet ? player.bet : null}</h3>
 			<div className="board">
 				<Player player={player} handleBet={handleBet} bet={bet} />
 				{bet ? <Dealer dealer={dealer} stand={stand} /> : null}
 			</div>
 			<span>{winner}</span>
-			<button onClick={handleStand} className="btn btn__stand">
-				Stand
-			</button>
-			{stand || winner ? (
-				<button onClick={handleHit} className="btn btn__hit btn__disabled" disabled>
-					Hit
-				</button>
-			) : (
-				<button onClick={handleHit} className="btn btn__hit">
-					Hit
-				</button>
-			)}
-			<button onClick={handleShuffle} className="btn btn__stand">
+			{bet ? (
+				<div className="horizontal-div">
+					<button onClick={handleStand} className="btn btn__stand">
+						Stand
+					</button>
+					{!(stand || winner) ? (
+						<button onClick={handleHit} className="btn btn__hit">
+							Hit
+						</button>
+					) : null}
+					{/* <button onClick={handleShuffle} className="btn btn__stand">
 				Shuffle
-			</button>
+			</button> */}
+				</div>
+			) : null}
 		</div>
 	);
 }
