@@ -225,13 +225,12 @@ function Game({ minBet }) {
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
 			{winner === 'player' ? <Confetti /> : null}
-			<WinnerModal
-				isOpen={isOpen}
-				winner={winner}
-				resetGame={resetGame}
-			/>
+			<WinnerModal isOpen={isOpen} winner={winner} resetGame={resetGame} />
+			<h3 style={{ color: 'white', fontWeight: '300', fontSize: '3rem' }}>
+				{player.bet ? `$${player.bet}` : null}
+			</h3>
 			{player.money >= minBet ? (
-				<button onClick={dealHand} className="btn btn__stand">
+				<button onClick={dealHand} className="btn btn__bet">
 					Place bet
 				</button>
 			) : (
@@ -240,7 +239,6 @@ function Game({ minBet }) {
 				</Link>
 			)}
 
-			<h3>{player.bet ? player.bet : null}</h3>
 			<div className="board">
 				<Player player={player} handleBet={handleBet} bet={bet} />
 				{bet ? <Dealer dealer={dealer} stand={stand} /> : null}
