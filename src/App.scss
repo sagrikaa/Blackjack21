@@ -19,7 +19,11 @@ html {
   font-size: 62.5%;
 
   @media only screen and (max-width:$bp-large) {
-    font-size: 50%; //8px/16px
+    font-size: 56.25%; // 9px/16px
+  }
+
+  @media only screen and (max-width:$bp-sm) {
+    font-size: 50%; // 8px/16px
   }
 }
 
@@ -37,15 +41,14 @@ body {
   background-image: url(./container/congruent_outline.png);
 
 
-  @media only screen and (max-width:$bp-sm) {
-    padding: 1rem;
-  }
 
 }
 
 .horizontal-div {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 
 }
 
@@ -65,13 +68,21 @@ body {
   padding: 5rem;
   flex: 0 0 100%;
   align-self: stretch;
+
+  @media only screen and (max-width:$bp-larger) {
+    padding: 3rem
+  }
+
+  @media only screen and (max-width:$bp-sm) {
+    padding: 1rem
+  }
+
 }
 
 .landing-page,
 .settings {
 
   background-image: linear-gradient(to right bottom, rgba(#135B0D, .9), rgba(#0D3909, .9));
-  // height: 50%;
   width: 50%;
   border-radius: 10px;
   display: flex;
@@ -86,98 +97,35 @@ body {
   box-shadow: 0 1rem 2rem rgba(black, .6);
   flex: 0 0 50%;
 
-}
-
-.heading {
-
-  &-2 {
-    font-size: 6rem;
-    margin: 2rem 2rem 5rem 2rem;
-
-    &__entered {
-      color: #D4AF37;
-      -webkit-text-stroke-width: 2px;
-      -webkit-text-stroke-color: black;
-      display: inline-block;
-      background-image: linear-gradient(to right, #D4AF37, #bcb380);
-      // background-image: linear-gradient(to right, yellow, pink, lime, red, blue);
-
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-
-
-    }
-
-    &__entering {
-      animation: moveInTop 2s ease-in-out;
-    }
-
+  @media only screen and (max-width:$bp-larger) {
+    width: 60%
   }
 
+  @media only screen and (max-width:$bp-large) {
+    width: 75%
+  }
 
-  &-main {
-    font-size: 4rem;
+  @media only screen and (max-width:$bp-sm) {
+    padding: 2rem;
+    width: 100%;
+    align-self: stretch;
+    top: 0;
+    left: 0;
+    transform: translate(0%, 0%);
+    position: inherit;
+    flex: 0 0 100%;
   }
 }
-
-
 
 .board {
   display: flex;
   padding: 5rem;
   align-self: stretch;
-}
 
-.btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  text-decoration: none;
-  outline: none;
-  border: none;
-  margin: 1rem;
-  border-radius: 5px;
-  text-transform: uppercase;
-  color: #fff;
-  background-color: black;
-  cursor: pointer;
-  box-shadow: 0 1rem 2rem black;
-  font-size: 1.8rem;
-  transition: .5s all;
-  padding: 1rem 2rem;
-
-  &__hit,
-  &__stand,
-  &__bet {
-    border-radius: 100%;
-    height: 11rem;
-    width: 11rem;
+  @media only screen and (max-width:$bp-sm) {
     padding: 3rem;
-    border-style: double;
-    border-color: yellow red blue lime;
-    border-width: 1.5rem;
-    box-shadow: 0 1rem 2rem black;
   }
 
-  &__chips {
-    border-radius: 100%;
-    height: 7rem;
-    width: 7rem;
-    padding: 2rem;
-    border: thick dashed;
-    border-color: yellow red blue lime;
-
-  }
-
-  &__disabled {
-    background-color: rgba(black, .5);
-  }
-
-  &:hover {
-    transform: translateY(-.5rem) scale(1.1);
-  }
 }
 
 .player,
@@ -186,7 +134,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+
+
 }
+
 
 .cards {
   display: flex;
@@ -201,6 +152,13 @@ body {
   margin-left: -18%;
   margin-bottom: .5rem;
   box-shadow: 0 2rem 4rem rgba(rgb(11, 44, 8), .5);
+  // height: 112.5;
+  // width: 75;
+
+  // @media only screen and (max-width:$bp-sm) {
+  //   height: 100;
+  //   width: 66.66;
+  // }
 
   &-player__entered {
     margin-left: -18%;
@@ -223,82 +181,7 @@ body {
 }
 
 
-
-.chip {
-  height: 50px;
-  transition: all .1s;
-
-  &__red {
-    height: 56px;
-  }
-
-  &__black {}
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-}
-
-.score {
-  font-size: 3rem;
-  color: #fff;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: black;
-}
-
-
-.icon {
-  color: $color-light-grey-1;
-  font-size: 2rem;
-  margin: 1rem;
-
-  &__setting {
-    align-self: flex-end;
-    margin-top: -1rem;
-  }
-}
-
-@keyframes moveInTop {
-  0% {
-    opacity: 0;
-    transform: translateY(-10rem);
-
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0rem);
-
-
-  }
-}
-
-@keyframes playerCardAnimation {
-  0% {
-    opacity: 0;
-    transform: translateX(-20rem) translateY(30rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-
-  }
-}
-
-@keyframes dealerCardAnimation {
-  0% {
-    opacity: 0;
-    transform: translateX(20rem) translateY(30rem);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateX(0) translateY(0);
-
-  }
-}
-
+//FORM
 .form {
   display: flex;
 
@@ -349,6 +232,146 @@ body {
 
 }
 
+//BUTTONS
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  margin: 1rem;
+  border-radius: 5px;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: black;
+  cursor: pointer;
+  box-shadow: 0 1rem 2rem black;
+  font-size: 1.8rem;
+  transition: .5s all;
+  padding: 1rem 2rem;
+
+  @media only screen and (max-width:$bp-sm) {
+    font-size: 1.6rem;
+    padding: 1rem 1.5rem;
+  }
+
+  &__hit,
+  &__stand,
+  &__bet {
+    border-radius: 100%;
+    height: 11rem;
+    width: 11rem;
+    padding: 3rem;
+    border-style: double;
+    border-color: yellow red blue lime;
+    border-width: 1.5rem;
+    box-shadow: 0 1rem 2rem black;
+
+    @media only screen and (max-width:$bp-sm) {
+      height: 9rem;
+      width: 9rem;
+      padding: 2rem;
+      border-style: solid;
+      border-width: .5rem;
+      box-shadow: 0 1rem 2rem black;
+    }
+  }
+
+  &__chips {
+    border-radius: 100%;
+    height: 7rem;
+    width: 7rem;
+    padding: 2rem;
+    border: thick dashed;
+    border-color: yellow red blue lime;
+
+    @media only screen and (max-width:$bp-sm) {
+      height: 6rem;
+      width: 6rem;
+      border-width: .5rem;
+      box-shadow: 0 1rem 2rem black;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-.5rem) scale(1.1);
+  }
+}
+
+
+.heading {
+
+  &-2 {
+    font-size: 6rem;
+    margin: 2rem 2rem 5rem 2rem;
+
+    @media only screen and (max-width:$bp-large) {
+      font-size: 5rem;
+    }
+
+
+    @media only screen and (max-width:$bp-sm) {
+      font-size: 3rem;
+    }
+
+    &__entered {
+      color: #D4AF37;
+      -webkit-text-stroke-width: 2px;
+      -webkit-text-stroke-color: black;
+      display: inline-block;
+      background-image: linear-gradient(to right, #D4AF37, #bcb380);
+      // background-image: linear-gradient(to right, yellow, pink, lime, red, blue);
+
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+
+
+    }
+
+    &__entering {
+      animation: moveInTop 2s ease-in-out;
+    }
+
+  }
+
+
+  &-amount {
+    color: white;
+    font-weight: 300;
+    font-size: 3rem;
+
+    @media only screen and (max-width:$bp-sm) {
+      font-size: 2rem;
+    }
+
+  }
+}
+
+.score {
+  font-size: 3rem;
+  color: #fff;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+
+  @media only screen and (max-width:$bp-sm) {}
+}
+
+
+.icon {
+  color: $color-light-grey-1;
+  font-size: 2rem;
+  margin: 1rem;
+
+  &__setting {
+    align-self: flex-end;
+    margin-top: -1rem;
+  }
+}
+
+
 .utility {
   position: absolute;
   top: 0;
@@ -363,18 +386,58 @@ body {
       display: inline-block;
       transition: all .5s;
 
-
     }
 
     &:hover {
       transform: translateY(-.5rem) scale(1.1);
     }
-
-
-
   }
 
   &__icon {
     font-size: 3rem;
+  }
+}
+
+@keyframes moveInTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10rem);
+
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0rem);
+
+
+  }
+}
+
+
+
+//Animations
+@keyframes playerCardAnimation {
+  0% {
+    opacity: 0;
+    transform: translateX(-20rem) translateY(30rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+
+  }
+}
+
+@keyframes dealerCardAnimation {
+  0% {
+    opacity: 0;
+    transform: translateX(20rem) translateY(30rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+
   }
 }

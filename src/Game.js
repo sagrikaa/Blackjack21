@@ -232,9 +232,7 @@ function Game({ minBet, cash }) {
 					</button>
 				</AlertModal>
 			) : null}
-			<h3 style={{ color: 'white', fontWeight: '300', fontSize: '3rem' }}>
-				{player.bet ? `$${player.bet}` : null}
-			</h3>
+			<h3 className="heading-amount">{player.bet ? `$${player.bet}` : null}</h3>
 			{redirect === false ? (
 				<button onClick={dealHand} className="btn btn__bet">
 					Place bet

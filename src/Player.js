@@ -35,7 +35,7 @@ export default function Player({ player, handleBet, bet, minBet }) {
 					$500
 				</button>
 			</div>
-			<h2 style={{ color: 'white', fontWeight: '300', fontSize: '3rem' }}>${player.money}</h2>
+			<h2 className="heading-amount">${player.money}</h2>
 		</div>
 	);
 }

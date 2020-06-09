@@ -13,6 +13,8 @@ export default function Card(props) {
 
 	const drawCard = () => {
 		const destination = canvas.current;
+		destination.width = 100;
+		console.log(destination.width);
 		const ctx = destination.getContext('2d');
 		let img = new Image();
 
@@ -29,6 +31,12 @@ export default function Card(props) {
 			const dy = 0;
 
 			//Destination specs
+			let x = window.matchMedia('(max-width: 600px)');
+			if (x.matches) {
+				// If media query matches
+				destination.width = 60;
+				destination.height = 90;
+			}
 			const dWidth = 75;
 			const dHeight = 112.5; // height to width ratio = 3/2
 			//if the card is turned down
@@ -81,10 +89,10 @@ export default function Card(props) {
 						break;
 				}
 			}
-			ctx.drawImage(img, cx, cy, cWidth, cHeight, dx, dy, dWidth, dHeight);
+			ctx.drawImage(img, cx, cy, cWidth, cHeight, dx, dy, destination.width, destination.height);
 		};
 
-		img.src = 'https://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
+		img.src = 'http://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
 	};
 
 	return (
