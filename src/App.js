@@ -14,7 +14,7 @@ function App() {
 			<div className="App">
 				<Switch>
 					<Route path="/game">
-						<Game minBet={minBet} />
+						<Game minBet={minBet} cash={cash} />
 					</Route>
 					<Route path="/settings">
 						<Settings minBet={minBet} cash={cash} setMinBet={setMinBet} setCash={setCash} />
