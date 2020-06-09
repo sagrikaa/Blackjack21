@@ -2,7 +2,7 @@ import React from 'react';
 import Card from './Card';
 import Chips from './Chips';
 
-export default function Player({ player, handleBet, bet }) {
+export default function Player({ player, handleBet, bet, minBet }) {
 	return (
 		<div className="player">
 			{bet ? (
@@ -20,8 +20,8 @@ export default function Player({ player, handleBet, bet }) {
 			) : null}
 
 			<div className="horizontal-div">
-				<button onClick={() => handleBet(5)} className="btn btn__chips">
-					$5
+				<button onClick={() => handleBet(minBet)} className="btn btn__chips">
+					Min Bet
 				</button>
 				<button onClick={() => handleBet(10)} className="btn btn__chips">
 					$10

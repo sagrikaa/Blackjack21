@@ -9,12 +9,12 @@ import { Transition } from 'react-transition-group';
 import { Link, Redirect } from 'react-router-dom';
 import AlertModal from './AlertModal';
 
-function Game({ minBet }) {
+function Game({ minBet, cash }) {
 	const [ player, setPlayer ] = useState({
 		name: 'player',
 		cards: [],
 		score: 0,
-		money: parseInt(localStorage.getItem('money')) || 2000,
+		money: parseInt(localStorage.getItem('money')) || cash,
 		bet: 0
 	});
 
@@ -237,7 +237,7 @@ function Game({ minBet }) {
 			)}
 
 			<div className="board">
-				<Player player={player} handleBet={handleBet} bet={bet} />
+				<Player player={player} handleBet={handleBet} bet={bet} minBet={minBet} />
 				{bet ? <Dealer dealer={dealer} stand={stand} /> : null}
 			</div>
 			{bet ? (
