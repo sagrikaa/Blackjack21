@@ -3,7 +3,7 @@ import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay, faCog } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-export default function LandingPage({ handlePlay, handleSetting, setPlay }) {
+export default function LandingPage() {
 	return (
 		<div className="landing-page">
 			<Transition in={true} timeout={2000} appear>

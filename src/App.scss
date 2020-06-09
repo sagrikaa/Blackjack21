@@ -344,13 +344,37 @@ body {
     font-weight: 700;
     display: block;
     color: black;
-    //   transition: all .3s;
-    // }
 
-    // &_input:placeholder-shown+&_label {
-    //   opacity: 0;
-    //   visibility: hidden;
-    //   transform: translateY(-3rem);
   }
 
+}
+
+.utility {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 3rem 4rem;
+
+  &__link {
+
+    &,
+    &:visited,
+    &:link {
+      display: inline-block;
+      transition: all .5s;
+
+
+    }
+
+    &:hover {
+      transform: translateY(-.5rem) scale(1.1);
+    }
+
+
+
+  }
+
+  &__icon {
+    font-size: 3rem;
+  }
 }

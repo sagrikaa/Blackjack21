@@ -8,6 +8,8 @@ import axios from 'axios';
 import { Transition } from 'react-transition-group';
 import { Link, Redirect } from 'react-router-dom';
 import AlertModal from './AlertModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome, faCog } from '@fortawesome/free-solid-svg-icons';
 
 function Game({ minBet, cash }) {
 	const [ player, setPlayer ] = useState({
@@ -122,7 +124,6 @@ function Game({ minBet, cash }) {
 	};
 
 	const handleShuffle = (func) => {
-		console.log('shuffle');
 		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/shuffle').then((res) => {
 			checkShuffle(res.data.remaining);
 		});
@@ -137,7 +138,6 @@ function Game({ minBet, cash }) {
 	//Initial game setup
 	useEffect(
 		() => {
-			console.log('here');
 			if (!localStorage.getItem('money') || localStorage.getItem('money') === 0)
 				localStorage.setItem('money', player.money);
 			if (bet === true) {
@@ -182,7 +182,6 @@ function Game({ minBet, cash }) {
 		setWinner('');
 
 		if (player.money <= 0) {
-			console.log('reset');
 			localStorage.removeItem('money');
 			setRedirect(true);
 		}
@@ -191,7 +190,6 @@ function Game({ minBet, cash }) {
 	useEffect(
 		() => {
 			if (winner !== '') {
-				console.log(winner);
 				let newMoney = player.money;
 				if (winner === 'dealer') {
 					newMoney -= player.bet;
@@ -210,12 +208,21 @@ function Game({ minBet, cash }) {
 
 	return (
 		<div className="game animate__animated animate__zoomIn animate__slower">
+			<div className="utility">
+				<Link to="/" className="utility__link">
+					<FontAwesomeIcon icon={faHome} className="icon utility__icon" />
+				</Link>
+
+				<Link to="/settings" className="utility__link">
+					<FontAwesomeIcon icon={faCog} className="icon utility__icon " />
+				</Link>
+			</div>
+
 			{/* display winner using a modal and cofetti  */}
 			<Transition in={true} timeout={2000} appear>
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
 			{winner === 'player' ? <Confetti /> : null}
-			{console.log(isOpen)}
 			<WinnerModal isOpen={isOpen} winner={winner} resetGame={resetGame} setIsOpen={setIsOpen} />
 			{shuffle === true ? (
 				<AlertModal isOpen={shuffle}>

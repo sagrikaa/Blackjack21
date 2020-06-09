@@ -84,7 +84,7 @@ export default function Card(props) {
 			ctx.drawImage(img, cx, cy, cWidth, cHeight, dx, dy, dWidth, dHeight);
 		};
 
-		img.src = 'http://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
+		img.src = 'https://math.hws.edu/eck/cs124/javanotes6/c13/cards.png';
 	};
 
 	return (

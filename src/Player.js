@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from './Card';
-import Chips from './Chips';
 
 export default function Player({ player, handleBet, bet, minBet }) {
 	return (
