@@ -10,8 +10,8 @@ export default function LandingPage({ handlePlay, handleSetting, setPlay }) {
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>BlackJack 21</h2>}
 			</Transition>
 			<div className="horizontal-div">
-				<Link to="/game" className=" btn btn__play">
-					{localStorage.getItem('money') ? 'Resume' : 'Play'}
+				<Link to="/game" className=" btn">
+					{localStorage.getItem('money') > 0 ? 'Resume' : 'Play'}
 					<FontAwesomeIcon icon={faPlay} className="icon" />
 				</Link>
 

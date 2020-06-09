@@ -29,15 +29,17 @@ const customStyle = {
 		color: 'white'
 	}
 };
-export default function WinnerModal({ isOpen, winner, setIsOpen, resetGame }) {
-	const handleClose = () => {
-		resetGame();
-	};
+export default function AlertModal(props) {
+	// const handleClose = () => {
+	// 	resetGame();
+	// };
 	return (
 		<div>
 			<ReactModal
-				isOpen={isOpen}
-				onRequestClose={handleClose}
+				isOpen={props.isOpen}
+				onRequestClose={() => {
+					props.setIsOpen(false);
+				}}
 				// onAfterClose={resetGame}
 				ariaHideApp={false}
 				style={{
@@ -50,13 +52,14 @@ export default function WinnerModal({ isOpen, winner, setIsOpen, resetGame }) {
 						left: 0,
 						right: 0,
 						bottom: 0,
-						backgroundColor: 'rgba(0,0,0, 0.4)'
+						backgroundColor: 'rgba(0,0,0, 0.7)'
 					},
 					content: {
 						position: 'unset',
 						display: 'flex',
 						justifyContent: 'center',
 						alignItems: 'center',
+						flexDirection: 'column',
 						background: 'transparent',
 						overflow: 'auto',
 						WebkitOverflowScrolling: 'touch',
@@ -69,7 +72,7 @@ export default function WinnerModal({ isOpen, winner, setIsOpen, resetGame }) {
 						color: 'white'
 					}
 				}}>
-				<p>{winner === 'player' ? 'Congratulations!! You won the bet' : 'You lost. Better Luck Next time!'}</p>
+				{props.children}
 			</ReactModal>
 		</div>
 	);

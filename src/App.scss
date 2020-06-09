@@ -129,25 +129,24 @@ body {
 }
 
 .btn {
-  text-decoration: none;
-  outline: none;
-  border: none;
-  padding: 1rem 2rem;
-  margin: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: center;
+  text-decoration: none;
+  outline: none;
+  border: none;
+  margin: 1rem;
   border-radius: 5px;
-
   text-transform: uppercase;
   color: #fff;
   background-color: black;
-  font-size: 1.2rem;
   cursor: pointer;
   margin: 2rem;
   box-shadow: 0 1rem 2rem black;
-
+  font-size: 2rem;
+  transition: .5s all;
+  padding: 1rem 2rem;
 
   &__hit,
   &__stand,
@@ -156,10 +155,9 @@ body {
     height: 11rem;
     width: 11rem;
     padding: 3rem;
-    font-size: 2rem;
     border-style: double;
     border-color: yellow red blue lime;
-    border-width: 15px;
+    border-width: 1.5rem;
     box-shadow: 0 1rem 2rem black;
   }
 
@@ -168,7 +166,6 @@ body {
     height: 7rem;
     width: 7rem;
     padding: 2rem;
-    font-size: 2rem;
     border: thick dashed;
     border-color: yellow red blue lime;
 
@@ -176,6 +173,10 @@ body {
 
   &__disabled {
     background-color: rgba(black, .5);
+  }
+
+  &:hover {
+    transform: translateY(-.5rem) scale(1.1);
   }
 }
 
@@ -239,7 +240,7 @@ body {
 }
 
 .score {
-  font-size: 1.6rem;
+  font-size: 3rem;
   color: #fff;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;

@@ -32,6 +32,9 @@ export default function Player({ player, handleBet, bet }) {
 				<button onClick={() => handleBet(100)} className="btn btn__chips">
 					$100
 				</button>
+				<button onClick={() => handleBet(500)} className="btn btn__chips">
+					$500
+				</button>
 			</div>
 			<h2 style={{ color: 'white', fontWeight: '300', fontSize: '3rem' }}>${player.money}</h2>
 		</div>
