@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactModal from 'react-modal';
 
-export default function WinnerModal({ isOpen, winner, setIsOpen, resetGame }) {
+export default function WinnerModal({ isOpen, resetGame, winner }) {
 	const handleClose = () => {
 		resetGame();
 	};

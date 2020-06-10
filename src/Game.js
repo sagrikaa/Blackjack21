@@ -23,8 +23,7 @@ function Game({ minBet, cash }) {
 	const [ dealer, setDealer ] = useState({
 		name: 'dealer',
 		cards: [],
-		score: 0,
-		showCard: false
+		score: 0
 	});
 
 	const [ shuffle, setShuffle ] = useState(false);
@@ -85,6 +84,7 @@ function Game({ minBet, cash }) {
 		//when player is hitting
 		if (player.score > 21 || dealer.score === 21 || (stand && dealer.score > player.score)) {
 			setWinner('dealer');
+
 			return;
 		}
 	};
@@ -180,25 +180,42 @@ function Game({ minBet, cash }) {
 		setStand(false);
 		setIsOpen(false);
 		setWinner('');
+		setPlayer({
+			...player,
+			cards: [],
+			score: 0
+		});
 
+		setDealer({
+			...dealer,
+			cards: [],
+			score: 0
+		});
 		if (player.money <= 0) {
 			localStorage.removeItem('money');
 			setRedirect(true);
 		}
 	};
-	//if Winner is set then open dealer card
+	//if Winner is set then
 	useEffect(
 		() => {
-			if (winner !== '') {
+			if (winner !== '' || winner.length !== 0) {
 				let newMoney = player.money;
+
+				//update player's cash
 				if (winner === 'dealer') {
 					newMoney -= player.bet;
 				} else {
 					newMoney += player.bet;
 				}
+				//open dealer card
 				setStand(true);
+
+				//open winner modal
 				setIsOpen(true);
 				// setBet(false);
+
+				//set the new player values
 				setPlayer({ ...player, bet: 0, money: newMoney });
 				localStorage.setItem('money', newMoney);
 			}
@@ -223,7 +240,7 @@ function Game({ minBet, cash }) {
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
 			{winner === 'player' ? <Confetti /> : null}
-			<WinnerModal isOpen={isOpen} winner={winner} resetGame={resetGame} setIsOpen={setIsOpen} />
+			<WinnerModal isOpen={isOpen} winner={winner} resetGame={resetGame} />
 			{shuffle === true ? (
 				<AlertModal isOpen={shuffle}>
 					<p>Sorry! No more cards in the deck left. Shuffle to keep playing.</p>

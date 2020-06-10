@@ -13,8 +13,6 @@ export default function Card(props) {
 
 	const drawCard = () => {
 		const destination = canvas.current;
-		destination.width = 100;
-		console.log(destination.width);
 		const ctx = destination.getContext('2d');
 		let img = new Image();
 
