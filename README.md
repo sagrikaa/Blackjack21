@@ -12,6 +12,8 @@
 
 This should open the app page on your browser
 
-
+##Resources used:
+[Deck of Cards] (https://deckofcardsapi.com/)
+[Card Image](https://math.hws.edu/eck/cs124/javanotes6/c13/cards.png)
 
 
