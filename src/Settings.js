@@ -5,9 +5,6 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 export default function Settings(props) {
-	// const [ minBet, setMinBet ] = useState(props.minBet);
-	// const [ cash, setCash ] = useState(props.cash);
-
 	const handleBetChange = (event) => {
 		props.setMinBet(event.target.value);
 	};

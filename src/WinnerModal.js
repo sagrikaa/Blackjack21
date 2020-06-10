@@ -10,7 +10,6 @@ export default function WinnerModal({ isOpen, resetGame, winner }) {
 			<ReactModal
 				isOpen={isOpen}
 				onRequestClose={handleClose}
-				// onAfterClose={resetGame}
 				ariaHideApp={false}
 				style={{
 					overlay: {

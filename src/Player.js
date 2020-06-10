@@ -11,7 +11,6 @@ export default function Player({ player, handleBet, bet, minBet }) {
 					</div>
 					<div className="cards">
 						{player.cards.map((card, index) => {
-							// if (index === 0) return <Card code={card.code} key={index} showCard={true} index={index} />;
 							return <Card code={card.code} key={index} showCard={true} customClass="player" />;
 						})}
 					</div>
