@@ -9,7 +9,6 @@ export default function AlertModal(props) {
 				onRequestClose={() => {
 					props.setIsOpen(false);
 				}}
-				// onAfterClose={resetGame}
 				ariaHideApp={false}
 				style={{
 					overlay: {

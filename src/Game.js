@@ -10,6 +10,7 @@ import { Link, Redirect } from 'react-router-dom';
 import AlertModal from './AlertModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faCog } from '@fortawesome/free-solid-svg-icons';
+import Rules from './Rules';
 
 function Game({ minBet, cash }) {
 	const [ player, setPlayer ] = useState({
@@ -39,7 +40,11 @@ function Game({ minBet, cash }) {
 	//variable to determine if the modal is open
 	const [ isOpen, setIsOpen ] = useState(false);
 
+	//Redirects to landing page
 	const [ redirect, setRedirect ] = useState(false);
+
+	//Shows rules
+	const [ showRules, setShowRules ] = useState(false);
 	const calculateValue = (person) => {
 		let score = 0;
 		let count = 0;
@@ -233,6 +238,14 @@ function Game({ minBet, cash }) {
 				<Link to="/settings" className="utility__link">
 					<FontAwesomeIcon icon={faCog} className="icon utility__icon " />
 				</Link>
+
+				<button
+					onClick={() => {
+						setShowRules(true);
+					}}
+					className="utility__link">
+					Rules
+				</button>
 			</div>
 
 			{/* display winner using a modal and cofetti  */}
@@ -249,6 +262,9 @@ function Game({ minBet, cash }) {
 					</button>
 				</AlertModal>
 			) : null}
+
+			<Rules showRules={showRules} setShowRules={setShowRules} />
+
 			<h3 className="heading-amount">{player.bet ? `$${player.bet}` : null}</h3>
 			{redirect === false ? (
 				<button onClick={dealHand} className="btn btn__bet">
