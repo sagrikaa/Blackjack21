@@ -375,6 +375,23 @@ body {
   top: 0;
   right: 0;
   margin: 3rem 4rem;
+  display: flex;
+  align-items: center;
+
+  &__btn {
+    font-size: 1.6rem;
+    color: white;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    margin: 1rem;
+    padding: 1rem;
+    transition: all .5s;
+
+    &:hover {
+      transform: translateY(-.5rem) scale(1.1);
+    }
+  }
 
   &__link {
 

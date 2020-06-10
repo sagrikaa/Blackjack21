@@ -243,7 +243,7 @@ function Game({ minBet, cash }) {
 					onClick={() => {
 						setShowRules(true);
 					}}
-					className="utility__link">
+					className="utility__btn">
 					Rules
 				</button>
 			</div>
