@@ -93,7 +93,7 @@ function Game({ minBet, cash }) {
 	const dealerStandsOnSeventeen = () => {
 		if (stand === true && (dealer.score < 17 && dealer.score <= player.score) && winner === '') {
 			let newDealer = dealer;
-			axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+			axios.get('https://deckofcardsapi.com/api/deck/p40k6nfzsqga/draw/?count=1').then((res) => {
 				newDealer.cards = [ ...dealer.cards, ...res.data.cards ];
 				setDealer({ ...newDealer });
 				checkShuffle(res.data.remaining);
@@ -116,7 +116,7 @@ function Game({ minBet, cash }) {
 	//function to generate card for player's each hit
 	const handleHit = () => {
 		let newPlayer = player;
-		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=1').then((res) => {
+		axios.get('https://deckofcardsapi.com/api/deck/p40k6nfzsqga/draw/?count=1').then((res) => {
 			newPlayer.cards = [ ...player.cards, ...res.data.cards ];
 			setPlayer({ ...newPlayer });
 			checkShuffle(res.data.remaining);
@@ -124,7 +124,7 @@ function Game({ minBet, cash }) {
 	};
 
 	const handleShuffle = (func) => {
-		axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/shuffle').then((res) => {
+		axios.get('https://deckofcardsapi.com/api/deck/p40k6nfzsqga/shuffle').then((res) => {
 			checkShuffle(res.data.remaining);
 		});
 	};
@@ -141,12 +141,12 @@ function Game({ minBet, cash }) {
 			if (!localStorage.getItem('money') || localStorage.getItem('money') === 0)
 				localStorage.setItem('money', player.money);
 			if (bet === true) {
-				axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
+				axios.get('https://deckofcardsapi.com/api/deck/p40k6nfzsqga/draw/?count=2').then((res) => {
 					setPlayer({ ...player, cards: [ ...res.data.cards ] });
 					checkShuffle(res.data.remaining);
 				});
 
-				axios.get('https://deckofcardsapi.com/api/deck/mbj29hqt3euq/draw/?count=2').then((res) => {
+				axios.get('https://deckofcardsapi.com/api/deck/p40k6nfzsqga/draw/?count=2').then((res) => {
 					setDealer({ ...dealer, cards: [ ...res.data.cards ] });
 					checkShuffle(res.data.remaining);
 				});
@@ -169,7 +169,7 @@ function Game({ minBet, cash }) {
 		() => {
 			if (winner === '') {
 				findWinner();
-				if (stand) dealerStandsOnSeventeen();
+				if (stand === true) dealerStandsOnSeventeen();
 			}
 		},
 		[ dealer.score, player.score ]
@@ -199,7 +199,7 @@ function Game({ minBet, cash }) {
 	//if Winner is set then
 	useEffect(
 		() => {
-			if (winner !== '' || winner.length !== 0) {
+			if (winner !== '') {
 				let newMoney = player.money;
 
 				//update player's cash
