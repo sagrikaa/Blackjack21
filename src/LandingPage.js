@@ -11,6 +11,7 @@ export default function LandingPage() {
 			</Transition>
 			<div className="horizontal-div">
 				<Link to="/game" className=" btn">
+					{/* if player has money, disply Resume else Play on the button */}
 					{localStorage.getItem('money') > 0 ? 'Resume' : 'Play'}
 					<FontAwesomeIcon icon={faPlay} className="icon" />
 				</Link>

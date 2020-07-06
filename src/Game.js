@@ -27,7 +27,9 @@ function Game({ minBet, cash }) {
 		score: 0
 	});
 
+	//API being used exhausts all cards, and hence needs shuffling after a while
 	const [ shuffle, setShuffle ] = useState(false);
+
 	//variable to determine if the bet is being played
 	const [ bet, setBet ] = useState(false);
 
@@ -58,18 +60,22 @@ function Game({ minBet, cash }) {
 				else if (cardNumber === 'J' || cardNumber === 'K' || cardNumber === 'Q' || cardNumber === '0')
 					score += 10;
 				else {
+					//for Ace count them and give them a default value of 11
 					count++;
 					score += 11;
 				}
 			});
 
 			while (count > 0) {
+				//if score is greater than 21 then you want to have a value of 1
+				//if the dealer card has value of greater than 17 but less than player cards then you want to have a vlaue of
 				if (score > 21 || (person.name === 'dealer' && score <= player.score && score >= 17)) {
 					score -= 10;
 					count--;
 				} else break;
 			}
 
+			//actually updatin the score
 			person.name === 'player' ? setPlayer({ ...player, score }) : setDealer({ ...dealer, score });
 		}
 
@@ -78,6 +84,10 @@ function Game({ minBet, cash }) {
 
 	const findWinner = () => {
 		//when player stands or blackjack
+
+		//if player has 21
+		//if player  stands and is greater than dealer while, dealer is greater than equal to 17
+		//if dealer reaches greater than 21
 		if (
 			player.score === 21 ||
 			(stand && ((dealer.score >= 17 && player.score >= dealer.score) || dealer.score > 21))
@@ -87,9 +97,11 @@ function Game({ minBet, cash }) {
 		}
 
 		//when player is hitting
+		//if player reaches greater than 21
+		//or if dealer is 21
+		//or if player stands and dealer is greater than player
 		if (player.score > 21 || dealer.score === 21 || (stand && dealer.score > player.score)) {
 			setWinner('dealer');
-
 			return;
 		}
 	};
@@ -143,6 +155,7 @@ function Game({ minBet, cash }) {
 	//Initial game setup
 	useEffect(
 		() => {
+			//if money isn't in localStorage, set the player
 			if (!localStorage.getItem('money') || localStorage.getItem('money') === 0)
 				localStorage.setItem('money', player.money);
 			if (bet === true) {
@@ -201,6 +214,7 @@ function Game({ minBet, cash }) {
 			setRedirect(true);
 		}
 	};
+
 	//if Winner is set then
 	useEffect(
 		() => {
@@ -213,7 +227,7 @@ function Game({ minBet, cash }) {
 				} else {
 					newMoney += player.bet;
 				}
-				//open dealer card
+				//open dealer card if player lost by going over 21
 				setStand(true);
 
 				//open winner modal
@@ -231,14 +245,17 @@ function Game({ minBet, cash }) {
 	return (
 		<div className="game animate__animated animate__zoomIn animate__slower">
 			<div className="utility">
+				{/* home link */}
 				<Link to="/" className="utility__link">
 					<FontAwesomeIcon icon={faHome} className="icon utility__icon" />
 				</Link>
 
+				{/* Settings link */}
 				<Link to="/settings" className="utility__link">
 					<FontAwesomeIcon icon={faCog} className="icon utility__icon " />
 				</Link>
 
+				{/* Rules link */}
 				<button
 					onClick={() => {
 						setShowRules(true);
@@ -252,8 +269,12 @@ function Game({ minBet, cash }) {
 			<Transition in={true} timeout={2000} appear>
 				{(state) => <h2 className={`heading-2 heading-2__${state}`}>Welcome to BlackJack 21!</h2>}
 			</Transition>
+
+			{/* Anytime player is a winner, throw confetti */}
 			{winner === 'player' ? <Confetti /> : null}
 			<WinnerModal isOpen={isOpen} winner={winner} resetGame={resetGame} />
+
+			{/* Any time you are out of cards show Shuffle Modal */}
 			{shuffle === true ? (
 				<AlertModal isOpen={shuffle}>
 					<p>Sorry! No more cards in the deck left. Shuffle to keep playing.</p>
@@ -263,6 +284,7 @@ function Game({ minBet, cash }) {
 				</AlertModal>
 			) : null}
 
+			{/* Rules modals showed when user clicks on rules button */}
 			<Rules showRules={showRules} setShowRules={setShowRules} />
 
 			<h3 className="heading-amount">{player.bet ? `$${player.bet}` : null}</h3>
